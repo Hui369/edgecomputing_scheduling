@@ -1,0 +1,69 @@
+package ntust.huiting.edgecomputing.v2;
+
+/**
+ * 封包類別
+ * @author hui
+ *
+ */
+public class Packet {
+	final private int queue_number = EmulatorParameters.queue_number;
+	final private int constant_deadline_time = EmulatorParameters.constant_deadline_time;
+	
+	public double arrival_time[] = new double[queue_number]; // 到達時間
+	public double service_time[] = new double[queue_number]; //  服務時間
+	public double departure_time[] = new double[queue_number]; //  完成時間
+	public double waiting_time[] = new double[queue_number]; //  等候時間
+	public int waiting_queue_length[] = new int[queue_number]; //  等候長度
+	public int waiting_queue_length_scheduled[] = new int[queue_number]; //  排程後等候長度
+	public int packet_index = 0; // 封包編號
+	public int service_type = 0; // 服務類型
+	public double deadline_time[] = new double[queue_number]; //  截止時間
+	public double remaining_time[] = new double[queue_number]; //  剩餘時間
+	
+	/**
+	 * 建構子
+	 * @param packet_index 封包編號
+	 * @param service_type 服務類型
+	 * @param arrival_time 到達時間
+	 * @param service_time 服務時間
+	 */
+	public Packet(int packet_index, int service_type, double arrival_time_gen, double service_time_gen[]) {
+		this.packet_index = packet_index;
+		this.service_type = service_type;
+		for(int i = 0; i < queue_number; i++) {
+			arrival_time[i] = 0;
+			service_time[i] = service_time_gen[i];
+			departure_time[i] = 0;
+			waiting_time[i] = 0;
+			waiting_queue_length[i] = 0;
+			waiting_queue_length_scheduled[i] = 0;
+		}
+		arrival_time[0] = arrival_time_gen;
+		deadline_time[0] = arrival_time[0] + constant_deadline_time;
+	}
+	
+	
+	/**
+	 * 取得封包資訊
+	 * @return 封包資訊
+	 */
+	public String info() {
+		StringBuffer buffer = new StringBuffer("\n");
+		for(int i = 0; i < 1; i++) {
+			buffer.append("---Queue_").append((i+1)).append("---\n");
+			buffer.append("封包編號: ").append(packet_index).append('\n');
+			buffer.append("服務類型: ").append(service_type).append('\n');
+			buffer.append("到達時間: ").append(arrival_time[i]).append('\n');
+			buffer.append("服務時間: ").append(service_time[i]).append('\n');
+			buffer.append("完成時間: ").append(departure_time[i]).append('\n');
+			buffer.append("截止時間: ").append(deadline_time[i]).append('\n');
+			buffer.append("剩餘時間: ").append(remaining_time[i]).append('\n');
+			buffer.append("等候時間: ").append(waiting_time[i]).append('\n');
+			buffer.append("等候長度: ").append(waiting_queue_length[i]).append('\n');
+			buffer.append("排程後等候長度: ").append(waiting_queue_length_scheduled[i]).append('\n');
+		}
+		buffer.append("===========\n");
+		
+		return buffer.toString();
+	}
+}
